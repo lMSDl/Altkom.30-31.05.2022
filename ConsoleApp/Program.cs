@@ -1,6 +1,7 @@
 ﻿
 using ConsoleApp;
 using ConsoleApp.Configuration.Models;
+using ConsoleApp.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -30,24 +31,50 @@ serviceCollection.AddLogging(options =>
     .AddDebug()
     .AddEventLog());
 
+//Transient - zawsze nowa instancja
+serviceCollection.AddTransient<IFontService, StandardFontService>();
+//Sigleton - raz utworzona instancja 
+serviceCollection.AddSingleton<IOutputService, RandomFontConsoleService>();
+//Scoped - instancja tworzona dla każdego nowego scope
+serviceCollection.AddScoped<IFontService, SubZeroFontService>();
+
 
 IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
 var loggerDemo = new LoggerDemo(serviceProvider.GetService<ILogger<LoggerDemo>>()!);
 loggerDemo.Work();
 
-loggerDemo = new LoggerDemo(serviceProvider.GetService<ILogger<LoggerDemo>>()!);
-loggerDemo.Work();
-
-loggerDemo = new LoggerDemo(serviceProvider.GetService<ILogger<LoggerDemo>>()!);
-loggerDemo.Work();
-
-
 var logger = serviceProvider.GetService<ILogger<Program>>()!;
 logger.LogCritical("It works!");
 
 
+//var fontServices = serviceProvider.GetServices<IFontService>();
+//var outputService = serviceProvider.GetService<IOutputService>()!;
 
+using (var scope = serviceProvider.CreateScope())
+{
+    scope.ServiceProvider.GetService<IOutputService>()!.WriteLine("Hello!");
+}
+using (var scope = serviceProvider.CreateScope())
+{
+    scope.ServiceProvider.GetService<IOutputService>()!.WriteLine("Hello!");
+}
+
+using (var scope = serviceProvider.CreateScope())
+{
+    scope.ServiceProvider.GetService<IOutputService>()!.WriteLine("Hello!");
+}
+using (var scope = serviceProvider.CreateScope())
+{
+    scope.ServiceProvider.GetService<IOutputService>()!.WriteLine("Hello!");
+}
+using (var scope = serviceProvider.CreateScope())
+{
+    scope.ServiceProvider.GetService<IOutputService>()!.WriteLine("Hello!");
+}
+
+
+Console.WriteLine();
 
 
 static void configuration(IConfigurationRoot config)
