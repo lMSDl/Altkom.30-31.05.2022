@@ -24,3 +24,15 @@ var config = new ConfigurationBuilder()
     Console.WriteLine($"{config["Bye"]}");
     Thread.Sleep(1000);
 }
+
+
+Console.WriteLine($"{config["Greetings:Greeting1"]} {config["Greetings:Targets:Person"]}");
+
+var greetingsSerction = config.GetSection("Greetings");
+var targetsSection = greetingsSerction.GetSection("Targets");
+//targetsSection = config.GetSection("Greetings:Targets");
+
+for (int i = 0; i < int.Parse(config["Repeat"]); i++)
+{
+    Console.WriteLine($"{greetingsSerction["Greeting2"]} {targetsSection["IA"]}");
+}

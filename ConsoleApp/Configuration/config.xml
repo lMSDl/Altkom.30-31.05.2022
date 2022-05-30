@@ -1,4 +1,13 @@
 <configuration>
 	<HelloXml>Xml</HelloXml>
 	<Bye>bye</Bye>
+	<Greetings>
+		<Greeting1>HELLO</Greeting1>
+		<Greeting2>HI</Greeting2>
+
+		<Targets>
+			<Person>Jerry</Person>
+			<IA>Siri</IA>
+		</Targets>
+	</Greetings>
 </configuration>

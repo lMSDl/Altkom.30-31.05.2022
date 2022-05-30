@@ -1,4 +1,14 @@
 {
     "Bye": "BYE",
-    "HelloJson": "Json"
+    "HelloJson": "Json",
+    "Repeat": 5,
+    "Greetings": {
+        "Greeting1": "Hello",
+        "Greeting2": "Hi",
+
+        "Targets": {
+            "Person": "Tom",
+            "IA": "Alexa"
+        }
+    }
 }
