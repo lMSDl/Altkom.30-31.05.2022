@@ -10,5 +10,21 @@
             "Person": "Tom",
             "IA": "Alexa"
         }
+    },
+    "Logging": {
+        "LogLevel": {
+            "Default": "error"
+        },
+        "Console": {
+            "LogLevel": {
+                "Default": "trace"
+            },
+            "IncludeScopes":  true
+        },
+        "EventLog": {
+            "LogLevel": {
+                "Default": "debug"
+            }
+        }
     }
 }
