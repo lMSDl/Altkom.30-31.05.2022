@@ -1,6 +1,11 @@
+using WebApp.Middleware;
+using WebApp.Services;
 using EnvironmentName = Microsoft.AspNetCore.Hosting.EnvironmentName;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<HelloService>();
+builder.Services.AddScoped<MapUse1Middleware>();
 
 var app = builder.Build();
 
@@ -16,40 +21,32 @@ app.Use(async (context, next) =>
 });
 
 
-app.Map("/map", mapApp =>
-{
+app.Map("/map", x => CofigureMap(x, app.Environment));
 
-    mapApp.Use(async (context, next) =>
-    {
-        Console.WriteLine("Begin of MapUse1");
-        await next();
-        Console.WriteLine("End of MapUse1");
-    });
 
-    mapApp.Run(async context =>
-    {
-        Console.WriteLine("Begin of MapRun");
-        await context.Response.WriteAsync("Map under construction");
-        Console.WriteLine("End of MapRun");
-    });
+app.Use2();
 
-});
+//app.UseMiddleware<Use2Middleware>();
 
-app.Use(async (context, next) =>
-{
-    Console.WriteLine("Begin of Use2");
-    await next();
-    Console.WriteLine("End of Use2");
-});
+//app.Use(async (context, next) =>
+//{
+//    Console.WriteLine("Begin of Use2");
+//    await next();
+//    Console.WriteLine("End of Use2");
+//});
 
 app.MapWhen(context => context.Request.Query.TryGetValue("name", out _), mapWhenApp =>
 {
-    mapWhenApp.Run(async context =>
-    {
-        Console.WriteLine("Begin of MapWhenRun");
-        await context.Response.WriteAsync($"{context.Request.Query["name"]} under construction");
-        Console.WriteLine("End of MapWhenRun");
-    });
+    mapWhenApp.MapWhenRun();
+    
+    //mapWhenApp.UseMiddleware<MapWhenRunMiddleware>();
+    
+    //mapWhenApp.Run(async context =>
+    //{
+    //    Console.WriteLine("Begin of MapWhenRun");
+    //    await context.Response.WriteAsync($"{context.Request.Query["name"]} under construction");
+    //    Console.WriteLine("End of MapWhenRun");
+    //});
 });
 
 app.Run(async context =>
@@ -79,3 +76,28 @@ switch (app.Environment.EnvironmentName)
 
 
 app.Run();
+
+
+
+void CofigureMap(IApplicationBuilder mapApp, IWebHostEnvironment env)
+{
+    if(env.IsDevelopment())
+        mapApp.MapUse1();
+
+    //mapApp.UseMiddleware<MapUse1Middleware>();
+
+    //mapApp.Use(async (context, next) =>
+    //{
+    //    Console.WriteLine("Begin of MapUse1");
+    //    await next();
+    //    Console.WriteLine("End of MapUse1");
+    //});
+
+    mapApp.Run(async context =>
+    {
+        Console.WriteLine("Begin of MapRun");
+        await context.Response.WriteAsync("Map under construction");
+        Console.WriteLine("End of MapRun");
+    });
+
+}
