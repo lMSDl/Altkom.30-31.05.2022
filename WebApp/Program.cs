@@ -22,8 +22,6 @@ app.Use(async (context, next) =>
 
 
 app.Map("/map", x => CofigureMap(x, app.Environment));
-
-
 app.Use2();
 
 //app.UseMiddleware<Use2Middleware>();
